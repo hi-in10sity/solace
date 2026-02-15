@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- META ATTRIBUTES -->
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- WEBSITE -->
+	<title>my solace</title>
+	<link rel="icon" type="image/x-icon" href="solace.png">
+
+	<!-- BS5 -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+	<!-- ANIMATE CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+	<!-- CSS -->
+	<link rel="stylesheet" href="styles.css">
+	<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=IM+Fell+English:ital@0;1&family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+
+</head>
+<body>
+	<div id="lockScreen" class="lock-screen">
+		<div class="lock-wrapper">
+			<div class="lock-ornament"></div>
+
+			<div class="lock-sub">✦ private archive ✦</div>
+			<h1 class="lock-title">enter his first name (lowercase)</h1>
+
+			<input 
+				type="password" 
+				id="passwordInput" 
+				class="lock-input"
+				autocomplete="off"
+			>
+
+			<div class="lock-divider"></div>
+
+			<button onclick="checkPassword()" class="lock-btn">
+				unseal
+			</button>
+
+			<div id="lockError" class="lock-error">
+				...that isn't him.
+			</div>
+		</div>
+	</div>
+
+
+	<div class="emojis-bg" id="emojiContainer"></div>
+
+	<section class="section" id="section3">
+		<div class="photos-bg" id="photosBg"></div>
+		<div class="counter-center text-center p-4">
+			<div class="counter-label">i've spent the past</div>
+			<div class="counter-number" id="counterDisplay">0</div>
+			<div class="counter-unit">seconds loving you</div>
+			<div class="counter-sub">since October 22, 2025</div>
+			<div class="counter-divider"></div>
+			<button class="btn-continue" onclick="goToSection4()">what's there to love?</button>
+		</div>
+	</section>
+
+	<section class="section" id="section4">
+	<div class="roblox-wrapper">
+		<div class="rb-topbar d-flex justify-content-between align-items-center">
+			<span>Server Region: Philippines · Server Lifetime: ∞ · Server Name: Happy Valentines!</span>
+			<span>100% · <i>Love Progress</i></span>
+		</div>
+
+		<div class="rb-panel">
+			<div class="rb-left">
+				<div class="rb-section-title">
+					<span>♥</span> Select Date
+				</div>
+
+				<div class="rb-class-item active" onclick="selectDate('oct',this)" data-date="oct">
+				<span class="rb-class-icon">💻</span> October
+				</div>
+
+				<div class="rb-class-item" onclick="selectDate('nov',this)" data-date="nov">
+				<span class="rb-class-icon">🌙</span> November
+				</div>
+
+				<div class="rb-class-item" onclick="selectDate('dec',this)" data-date="dec">
+				<span class="rb-class-icon">🎄</span> December
+				</div>
+
+				<div class="rb-class-item" onclick="selectDate('jan',this)" data-date="jan">
+				<span class="rb-class-icon">💌</span> January
+				</div>
+
+				<div class="rb-class-item" onclick="selectDate('feb',this)" data-date="feb">
+				<span class="rb-class-icon">💋</span> February
+				</div>
+
+				<div class="rb-team-section">
+					<div class="rb-team-title">Team Preview</div>
+					<div class="rb-team-btn pink d-flex align-items-center gap-2">
+						<div class="rb-team-dot">🌸</div>
+						 Steph
+					</div>
+					<div class="rb-team-btn gold d-flex align-items-center gap-2">
+						<div class="rb-team-dot">🐻</div>
+						 Bjorn
+					</div>
+				</div>
+			</div>
+			
+			<div class="rb-center d-flex flex-column align-items-center justify-content-center">
+				<div class="rb-memory-display d-flex flex-column align-items-center justify-content-center" id="centerDisplay">
+					<div class="rb-character-placeholder" id="centerImage"></div>
+					<div class="rb-memory-title" id="centerTitle">Look at the right!</div>
+					<div class="rb-memory-caption" id="centerCaption"></div>
+				</div>
+			</div>
+
+			<div class="rb-right">
+				<div class="rb-right-title d-flex align-items-center gap-2">
+					<span>♥</span> Select Moment
+				</div>
+				<div id="memoryList"></div>
+			</div>
+		</div>
+
+		<div class="rb-bottombar d-flex justify-content-between align-items-center">
+			<div class="rb-title-bar">stay with me · ∞</div>
+			<button class="rb-back-btn" onclick="goToSection3()">← Back</button>
+		</div>
+	</div>
+	</section>
+
+	<div class="memory-modal" id="memoryModal">
+		<div class="modal-card">
+			<button class="modal-close" onclick="closeModal()">✕</button>
+			<div class="corner-tl"></div>
+			<div class="corner-tr"></div>
+			<div class="corner-bl"></div>
+			<div class="corner-br"></div>
+			<span class="modal-emoji" id="modalEmoji"></span>
+			<div class="modal-date" id="modalDate"></div>
+			<div class="modal-title" id="modalTitle"></div>
+			<div class="modal-divider"></div>
+			<div class="modal-text" id="modalText"></div>
+		</div>
+	</div>
+
+	<script>
+		document.body.style.overflow = "hidden";
+
+		function checkPassword() {
+			const input = document.getElementById("passwordInput").value;
+			const error = document.getElementById("lockError");
+
+			if (input === "bjorn") {
+				document.getElementById("lockScreen").style.display = "none";
+				document.body.style.overflow = "auto";
+			} else {
+				error.classList.add("show");
+				document.getElementById("passwordInput").value = "";
+				setTimeout(() => error.classList.remove("show"), 800);
+			}
+		}
+
+		document.getElementById("passwordInput").addEventListener("keydown", function(e) {
+			if (e.key === "Enter") {
+				checkPassword();
+			}
+		});
+
+		const laptopPhotos = [
+			'img/jan/9(1).jpg',
+			'img/jan/304.302.jpg',
+			'img/jan/144.13.jpg',
+			'img/jan/5(1).jpg',
+			'img/jan/10(1).jpg',
+			'img/jan/144.28.jpg',
+			'img/jan/144.14.jpg',
+			'img/jan/12(1).jpg',
+			'img/jan/304.272.jpg',
+			'img/jan/304.312.jpg',
+			'img/jan/7(1).jpg',
+			'img/jan/14.jpg',
+			'img/jan/74.52#5.jpg',
+			'img/jan/144.302.jpg',
+			'img/jan/74.513.jpg',
+			'img/jan/304.29.jpg',
+			'img/jan/3(1).jpg',
+			'img/jan/304.28.jpg',
+			'img/jan/74.512.jpg',
+			'img/jan/84.09.jpg',
+			'img/jan/271.48.jpg',
+			'img/jan/1(1).jpg',
+			'img/jan/74.49.jpg',
+			'img/jan/271.47.jpg',
+			'img/jan/74.51.jpg',
+			'img/jan/74.524.jpg',
+			'img/jan/271.46.jpg',
+			'img/jan/8(1).jpg',
+			'img/jan/84.103.jpg',
+			'img/jan/4(1).jpg',
+			'img/jan/74.52.jpg',
+			'img/jan/84.102.jpg',
+			'img/jan/271.45.jpg',
+			'img/jan/84.072.jpg',
+			'img/jan/6(1).jpg',
+			'img/jan/84.10.jpg',
+			'img/jan/304.31.jpg',
+			'img/jan/74.523.jpg',
+			'img/jan/84.112.jpg',
+			'img/jan/84.113.jpg',
+			'img/jan/74.522.jpg',
+			'img/jan/304.30.jpg',
+			'img/jan/84.39.jpg',
+			'img/jan/84.11.jpg',
+			'img/jan/84.07.jpg',
+			'img/jan/304.27.jpg',
+			'img/jan/284.503.jpg',
+			'img/jan/284.52.jpg',
+			'img/jan/271.472.jpg',
+			'img/jan/144.222.jpg',
+			'img/jan/284.502.jpg',
+			'img/jan/2(1).jpg',
+			'img/jan/144.26.jpg',
+			'img/jan/144.24.jpg',
+			'img/jan/304.282.jpg',
+			'img/jan/144.30.jpg',
+			'img/jan/284.514.jpg',
+			'img/jan/284.51.jpg',
+			'img/jan/284.50.jpg',
+			'img/jan/304.283.jpg',
+			'img/jan/284.504.jpg',
+			'img/jan/304.292.jpg',
+			'img/jan/284.51#5.jpg',
+			'img/jan/144.22.jpg',
+			'img/jan/284.512.jpg',
+			'img/jan/271.462.jpg',
+			'img/jan/271.463.jpg',
+			'img/jan/284.513.jpg',
+			'img/jan/144.23.jpg',
+			'img/feb/9262.05 2.jpg',
+			'img/feb/60.jpg',
+			'img/feb/11264.04 2.jpg',
+			'img/feb/11264.04 3.jpg',
+			'img/feb/61.jpg',
+			'img/feb/59.jpg',
+			'img/feb/11264.19 2.jpg',
+			'img/feb/58.jpg',
+			'img/feb/11264.02 2.jpg',
+			'img/feb/11264.18.jpg',
+			'img/feb/11264.19.jpg',
+			'img/feb/11264.02 3.jpg',
+			'img/feb/9262.06 2.jpg',
+			'img/feb/9262.04 2.jpg',
+			'img/feb/39.jpg',
+			'img/feb/42.jpg',
+			'img/feb/56.jpg',
+			'img/feb/9262.04.jpg',
+			'img/feb/9262.05.jpg',
+			'img/feb/57.jpg',
+			'img/feb/43.jpg',
+			'img/feb/55.jpg',
+			'img/feb/41.jpg',
+			'img/feb/9262.07.jpg',
+			'img/feb/9262.06.jpg',
+			'img/feb/11264.02.jpg',
+			'img/feb/40.jpg',
+			'img/feb/54.jpg',
+			'img/feb/44.jpg',
+			'img/feb/45.jpg',
+			'img/feb/47.jpg',
+			'img/feb/11264.05.jpg',
+			'img/feb/11264.04.jpg',
+			'img/feb/46.jpg',
+		];
+
+		(function() {
+		const container = document.getElementById('emojiContainer');
+		const symbols = ['🐈', '🐻', '🤍', '🌸', '🐈‍⬛'];
+		for (let i = 0; i < 30; i++) {
+			const el = document.createElement('div');
+			el.className = 'emoji-float';
+			el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+			el.style.left = Math.random() * 100 + 'vw';
+			el.style.animationDuration = (10 + Math.random() * 20) + 's';
+			el.style.animationDelay = (Math.random() * 20) + 's';
+			el.style.fontSize = (0.8 + Math.random() * 1.4) + 'rem';
+			container.appendChild(el);
+		}
+		})();
+
+		document.addEventListener('click', function(e) {
+		const symbols = ['🐈', '🐻', '🤍', '🌸', '🐈‍⬛'];
+		const count = 7 + Math.floor(Math.random() * 5);
+		for (let i = 0; i < count; i++) {
+			const el = document.createElement('div');
+			const angle = Math.random() * Math.PI * 2;
+			const dist = 35 + Math.random() * 75;
+			const dx = (Math.cos(angle) * dist).toFixed(1);
+			const dy = (Math.sin(angle) * dist - 50).toFixed(1);
+			el.className = 'click-emoji';
+			el.style.left = e.clientX + 'px';
+			el.style.top = e.clientY + 'px';
+			el.style.fontSize = (0.75 + Math.random() * 1.1) + 'rem';
+			el.style.color = 'hsl(' + (335 + Math.random() * 30) + ',70%,' + (60 + Math.random() * 18) + '%)';
+			el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+			document.body.appendChild(el);
+			requestAnimationFrame(() => requestAnimationFrame(() => {
+			el.style.transform = 'translate(calc(-50% + ' + dx + 'px), calc(-50% + ' + dy + 'px))';
+			el.style.opacity = '0';
+			}));
+			setTimeout(() => el.remove(), 850);
+		}
+		});
+
+		const START_DATE = new Date('2025-10-22T00:00:00');
+
+		function startCounter() {
+		function update() {
+			const secs = Math.floor((new Date() - START_DATE) / 1000);
+			document.getElementById('counterDisplay').textContent = secs.toLocaleString();
+		}
+
+		update();
+			setInterval(update, 1000);
+		}
+
+		function buildPhotosBg() {
+			const bg = document.getElementById('photosBg');
+			bg.innerHTML = '';
+			const shuffled = [...laptopPhotos].sort(() => Math.random() - 0.5);
+			const picked = shuffled.slice(0, 20);
+			for (let i = 0; i < picked.length; i++) {
+				const stamp = document.createElement('div');
+				stamp.className = 'photo-stamp';
+				stamp.style.setProperty('--rot', (Math.random() * 10 - 5) + 'deg');
+				const img = document.createElement('img');
+				img.src = picked[i];
+				img.alt = '';
+				stamp.appendChild(img);
+				bg.appendChild(stamp);
+			}
+		}
+
+		startCounter();
+		buildPhotosBg();
+
+		function goToSection4() {
+			document.getElementById('section3').style.display = 'none';
+			const s4 = document.getElementById('section4');
+			s4.style.display = 'flex';
+			selectDate('oct', document.querySelector('[data-date="oct"]'));
+		}
+
+		function goToSection3() {
+			document.getElementById('section4').style.display = 'none';
+			document.getElementById('section3').style.display = 'flex';
+		}
+
+		const memories = {
+			oct: [
+				{ img: 'img/oct/1.jpg', name: 'Laptop Bag', date: 'October 22, 2025', title: 'im the person who accidentally dropped ur laptop.',  text: 'im still sorry about it... at least it didnt break :P i started waiting for commarts every wednesday after that day.' },
+				{ img: 'img/oct/2.jpg', name: 'mkns', date: 'October 26, 2025', title: 'nksnkfnsknfsmksmknskdfndsknfskmkdnskfndsk', text: 'the first proof of *timing*. i opened instagram to a msg from you spotting a mkns in my keyboard spam... who knows if it was you? (i may also be the one in that ngl, but who knows?)' },
+				{ img: 'img/oct/3.jpg', name: 'Ragebait', date: 'October 2025', title: 'thanks for being funny', text: "aaa, we have so much random moments from october huhu. story likes, ragebait, u being unhinged, just ask me for all the convo clips i have! gosh u're so silly <3" },
+			],
+			nov: [
+				{ img: 'img/nov/mem1.jpg', name: '???', date: 'November 2025', title: 'lots of random...', text: 'puro bullshit yung mga screenshots ko. tanungin mo nalang uli ako for the clips. hehe... D3ddyHerculas... i also jinxed smth' },
+				{ img: 'img/nov/mem2.jpg', name: 'Duck Donuts', date: 'November 17, 2025', title: 'the failed Circuit meetup', text: "we already know how this goes. sighs." },
+			],
+			dec: [
+				{ img: 'img/dec/mem1.jpg', name: 'Food Fair', date: 'December 5, 2025', title: 'come be lonely with me', text: "something felt horribly wrong about you standing alone. same goes about me standing alone. why did everything feel better when we were together, yapping and passing time?" },
+				{ img: 'img/dec/mem2.jpg', name: 'Christmas Party', date: 'December 18, 2025', title: 'the successful Circuit meetup', text: "fits and stance so convincing, we looked like we were on a date. we <3 duck donuts (and each other)! but also, i hope you know how much the seven minutes of 'stalking' meant to me." },
+				{ img: 'img/dec/mem3.jpg', name: 'December Break', date: 'December Break 2025', title: 'thank you for being my solace', text: "minecraft dogs and cats, duos, calls, ragebait, joybait... :( thank you for wanting to get closer with me. every bit of every day that i spent with you made december the opposite of boring." },
+				{ img: 'img/dec/mem4.jpg', name: 'Maligayang Pasko', date: 'December 24-25, 2025', title: "with me in spirit", text: "we already had our first Christmas together, no? a few cat reels turned into chatting almost the whole evening and the next day." },
+				{ img: 'img/dec/mem5.jpg', name: '3AM', date: 'December 30-31, 2025', title: "how to end your year", text: "step 1: have a two-hour deep talk about your feelings without spoiling that you're stupidly in love. step 2: never regret that decision." },
+			],
+			
+			jan: [
+				{ img: 'img/jan/56.41.jpg', name: 'Necklace', date: 'January 5, 2026', title: 'i kissed it to kiss you', text: "maybe i cried the night before because i thought i lost the necklace, but i'm forever thankful that i didn't. i know you miss it. i do too. but you didn't break any hearts, bjorn." },
+				{ img: 'img/jan/mem2.jpg', name: 'Confession', date: 'January 15, 2026', title: '30-minute clip', text: "fun fact: we haven't rewatched it. minecraft sunsets are so beautiful, you know? but we both know whose beauty beats any sunset. (i actually don't have any clips from the 15th for some reason...)" },
+				{ img: 'img/jan/mem3.jpg', name: 'Official', date: 'January 22, 2026', title: 'you know where to find me, and i know where to look.', text: "hard launch with matching baby pics goes crazy... and my mom knows now? and she's okay with it? is this a sign chat?" },
+				{ img: 'img/jan/mem4.jpg', name: 'Condo Visit #1', date: 'January 25, 2026', title: '15 minutes', text: 'that felt like a lifetime. waist hugs, holding hands, sky pics. let me feel the wind in my face again if it means i get to see you.' },
+			],
+
+			feb: [
+				{ img: 'img/feb/mem1.jpg', name: "Condo Visit #2", date: 'February 1, 2026', title: "🥺", text: 'innocent moments. nobody talks about what happened at three in the afternoon. nor what happened when you went home. :) thanks for making the first of the month the best!' },
+				{ img: 'img/feb/mem2.jpg', name: 'Burnout', date: '... Half of February 2026', title: '@#&$?!', text: "i never thought we'd get through the month, especially with how empty we felt so often. i'm glad we're getting better. i love you. thank you for all the trust you put in me, and thank you for staying." },
+				{ img: 'img/feb/13264.35.jpg', name: 'B-Day + V-Day', date: 'February 14, 2026', title: 'love.', text: "i'm honestly salty that i coded this to only have one image, for i could make a whole collage of just february 14. send me 'ginger car' after reading everything for another letter (read: sponty yap)." },
+			]
+		};
+
+		let currentDate = 'oct';
+
+		function selectDate(key, el) {
+			document.querySelectorAll('.rb-class-item').forEach(i => i.classList.remove('active'));
+			if (el) el.classList.add('active');
+			currentDate = key;
+
+			const list = document.getElementById('memoryList');
+			list.innerHTML = '';
+			(memories[key] || []).forEach((mem, idx) => {
+				const div = document.createElement('div');
+				div.className = 'rb-memory-item';
+				div.id = 'mem-' + key + '-' + idx;
+				div.innerHTML = '<div class="rb-mem-icon"><img src="' + mem.img + '" alt=""></div><div class="rb-mem-name">' + mem.name + '</div>';
+				div.onclick = () => selectMemory(key, idx);
+				list.appendChild(div);
+			});
+
+			document.getElementById('centerImage').innerHTML = '';
+			document.getElementById('centerTitle').textContent = 'Look at the right!';
+			document.getElementById('centerCaption').textContent = 'Click a memory';
+			document.getElementById('centerDisplay').classList.remove('has-memory');
+			document.getElementById('centerDisplay').onclick = null;
+		}
+
+		function selectMemory(key, idx) {
+			const mem = memories[key][idx];
+			document.querySelectorAll('.rb-memory-item').forEach(i => i.classList.remove('selected'));
+			const item = document.getElementById('mem-' + key + '-' + idx);
+			if (item) item.classList.add('selected');
+
+			const display = document.getElementById('centerDisplay');
+			display.classList.add('has-memory');
+			document.getElementById('centerImage').innerHTML = '<img src="' + mem.img + '" alt="">';
+			document.getElementById('centerTitle').textContent = mem.name;
+			document.getElementById('centerCaption').textContent = 'Click to open';
+			display.onclick = () => openModal(mem);
+		}
+
+		function openModal(mem) {
+			document.getElementById('modalEmoji').innerHTML = '<img src="' + mem.img + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:2px;">';
+			document.getElementById('modalDate').textContent = '\u2726  ' + mem.date + '  \u2726';
+			document.getElementById('modalTitle').textContent = mem.title;
+			document.getElementById('modalText').textContent = mem.text;
+			document.getElementById('memoryModal').classList.add('open');
+		}
+
+		function closeModal() {
+			document.getElementById('memoryModal').classList.remove('open');
+		}
+
+		document.getElementById('memoryModal').addEventListener('click', function(e) {
+		if (e.target === this) closeModal();
+		});
+	</script>
+</body>
+</html>
